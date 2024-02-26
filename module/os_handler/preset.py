@@ -24,7 +24,7 @@ OS_SHOP = {
         GearDesignPlanT2 > DevelopmentMaterialT3 > PlateRandomT4 > GearPartPrototype > OrdnanceTestingReportT2 > 
         ActionPoint > 
         GearDesignPlan > OrdnanceTestingReport > DevelopmentMaterialT2 > 
-        DevelopmentMaterial > Turing > TuringSample > EnergyStorageDevice > RepairPack
+        DevelopmentMaterial > Tuning > TuningSample > EnergyStorageDevice > RepairPack
     """,
     'all': """
         Logger > PurpleCoins > GearDesignPlanT3 > GearPartSpecialized > OrdnanceTestingReportT3 > 
@@ -32,6 +32,6 @@ OS_SHOP = {
         ActionPoint > 
         METARedBook > CrystallizedHeatResistantSteel > NanoceramicAlloy > NeuroplasticProstheticArm > SupercavitationGenerator > 
         GearDesignPlan > OrdnanceTestingReport >DevelopmentMaterialT2 > 
-        DevelopmentMaterial > Turing > TuringSample > EnergyStorageDevice > RepairPack
+        DevelopmentMaterial > Tuning > TuningSample > EnergyStorageDevice > RepairPack
     """
 }

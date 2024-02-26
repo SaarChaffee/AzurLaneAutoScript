@@ -8,8 +8,8 @@ FILTER_REGEX = re.compile(
     '^(actionpoint|crystallizedheatresistantsteel|developmentmaterial'
     '|energystoragedevice|geardesignplan|gearpart|logger|metaredbook'
     '|nanoceramicalloy|neuroplasticprostheticarm|ordnancetestingreport'
-    '|platerandom|purplecoins|repairpack|supercavitationgenerator|turingsample'
-    '|turings)'
+    '|platerandom|purplecoins|repairpack|supercavitationgenerator|tuningsample'
+    '|tuning)'
 
     '(20|50|100|prototype|specialized|abyssal|obscure|full2|full|triple2|triple|2'
     '|combat|offence|survival)?'
