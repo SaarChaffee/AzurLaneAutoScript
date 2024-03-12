@@ -11,8 +11,8 @@ from module.ui.scroll import Scroll
 from module.ui.ui import UI
 
 OS_SHOP_SCROLL = Scroll(OS_SHOP_SCROLL_AREA, color=(148, 174, 231), name="OS_SHOP_SCROLL")
-OS_SHOP_SCROLL.edge_threshold = 0.15
-OS_SHOP_SCROLL.drag_threshold = 0.15
+OS_SHOP_SCROLL.edge_threshold = 0.05
+OS_SHOP_SCROLL.drag_threshold = 0.05
 
 class OSShopUI(UI):
     def os_shop_load_ensure(self, skip_first_screenshot=True):
@@ -94,7 +94,7 @@ class OSShopUI(UI):
 
     def init_slider(self) -> Tuple[float, float]:
         """Initialize the slider
-        
+
         Returns:
             Tuple[float, float]: (pre_pos, cur_pos)
         """
@@ -104,18 +104,19 @@ class OSShopUI(UI):
         retry = Timer(0, count=3)
         retry.start()
         while not OS_SHOP_SCROLL.at_top(main=self):
+            logger.info('Scroll does not at top, try to scroll')
             OS_SHOP_SCROLL.set_top(main=self)
             if retry.reached():
                 raise ScriptError('Scroll drag page error.')
         return -1.0, 0.0
-    
+
     def rescue_slider(self, distance=200):
         detection_area = (1130, 230, 1170, 710)
         direction_vector = (0, distance)
         p1, p2 = random_rectangle_vector(
-                direction_vector, box=detection_area, random_range=(-10, -40, 10, 40), padding=10)
+            direction_vector, box=detection_area, random_range=(-10, -40, 10, 40), padding=10)
         self.device.drag(p1, p2, segments=2, shake=(25, 0), point_random=(0, 0, 0, 0), shake_random=(-5, 0, 5, 0))
-        self.device.sleep(0.5)
+        self.device.click(OS_SHOP_SAFE_AREA)
         self.device.screenshot()
 
     def pre_scroll(self, pre_pos, cur_pos) -> float:
@@ -132,18 +133,19 @@ class OSShopUI(UI):
             cur_pos: Current position
         """
         if pre_pos == cur_pos:
-            logger.warning('ScriptError, Scroll drag page error')
+            logger.warning('ScriptError, Scroll drag page failed')
             if not OS_SHOP_SCROLL.appear(main=self):
                 logger.warning('ScriptError, Scroll does not appear, try to rescue slider')
                 self.rescue_slider()
-            OS_SHOP_SCROLL.set(cur_pos, main=self)
+                OS_SHOP_SCROLL.set(cur_pos, main=self)
             retry = Timer(0, count=3)
             retry.start()
             while True:
-                logger.warning('ScriptError, Scroll drag page error, retrying scroll')
+                logger.warning('ScriptError, Scroll does not drag success, retrying scroll')
                 OS_SHOP_SCROLL.next_page(main=self, page=0.5)
                 cur_pos = OS_SHOP_SCROLL.cal_position(main=self)
                 if pre_pos != cur_pos:
+                    logger.info(f'Scroll success drag page to {cur_pos}')
                     return cur_pos
                 if retry.reached():
                     raise ScriptError('Scroll drag page error.')
