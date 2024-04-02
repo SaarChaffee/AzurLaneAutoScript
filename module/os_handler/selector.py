@@ -55,7 +55,7 @@ class Selector():
             bool: True if there are enough coins.
         """
         if item.cost == 'YellowCoins' and \
-                item.price <= self._shop_yellow_coins - 100000 if self.is_cl1_enabled else 35000:
+                item.price <= self._shop_yellow_coins - (100000 if self.is_cl1_enabled else 35000):
             return True
         if item.cost == 'PurpleCoins' and \
                 item.price <= self._shop_purple_coins:
