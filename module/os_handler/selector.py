@@ -21,12 +21,6 @@ FILTER = Filter(FILTER_REGEX, FILTER_ATTR)
 
 
 class Selector():
-    prise_yellow_coin = 0
-    prise_purple_coin = 0
-
-    def clear_prise(self):
-        self.prise_yellow_coin = 0
-        self.prise_purple_coin = 0
 
     def pretreatment(self, items) -> list:
         """
@@ -60,12 +54,11 @@ class Selector():
         Returns:
             bool: True if there are enough coins.
         """
-        if item.cost == 'YellowCoins' and self.prise_yellow_coin + item.price <= \
-                self._shop_yellow_coins - 100000 if self.is_cl1_enabled else 35000:
-            self.prise_yellow_coin += item.price
+        if item.cost == 'YellowCoins' and \
+                item.price <= self._shop_yellow_coins - 100000 if self.is_cl1_enabled else 35000:
             return True
-        if item.cost == 'PurpleCoins' and self.prise_purple_coin + item.price <= self._shop_purple_coins:
-            self.prise_purple_coin += item.price
+        if item.cost == 'PurpleCoins' and \
+                item.price <= self._shop_purple_coins:
             return True
 
         return False
@@ -111,7 +104,6 @@ class Selector():
         Returns:
             list[Item]:
         """
-        self.clear_prise()
         items = self.pretreatment(items)
         parser = self.config.OpsiGeneral_AkashiShopFilter
         if not parser.strip():
@@ -129,7 +121,6 @@ class Selector():
         Returns:
             list[Item]:
         """
-        self.clear_prise()
         items = self.pretreatment(items)
         preset = self.config.OpsiShop_PresetFilter
         parser = ''
