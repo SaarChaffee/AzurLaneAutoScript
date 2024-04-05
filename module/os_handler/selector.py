@@ -73,11 +73,9 @@ class Selector():
         Returns:
             bool: True if there are enough coins.
         """
-        if item.cost == 'YellowCoins' and self.prise_yellow_coin + item.price <= self._shop_yellow_coins:
-            self.prise_yellow_coin += item.price
+        if item.cost == 'YellowCoins' and item.price <= self._shop_yellow_coins:
             return True
-        if item.cost == 'PurpleCoins' and self.prise_purple_coin + item.price <= self._shop_purple_coins:
-            self.prise_purple_coin += item.price
+        if item.cost == 'PurpleCoins' and item.price <= self._shop_purple_coins:
             return True
 
         return False
