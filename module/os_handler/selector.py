@@ -107,7 +107,7 @@ class Selector():
         if not parser.strip():
             parser = GeneratedConfig.OpsiGeneral_AkashiShopFilter
         FILTER.load(parser)
-        return FILTER.apply(items, func=[self.check_cl1_purple_coins, self.enough_coins_in_akashi])
+        return FILTER.applys(items, funcs=[self.check_cl1_purple_coins, self.enough_coins_in_akashi])
 
     def items_filter_in_os_shop(self, items) -> list:
         """

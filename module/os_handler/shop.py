@@ -195,7 +195,7 @@ class OSShopHandler(OSStatus, OSShopUI, Selector, MapEventHandler):
                 items = self.os_shop_get_items_in_akashi(name=True)
                 continue
             else:
-                items = self.items_filter_in_os_shop(items)
+                items = self.os_shop_get_items_in_akashi(items)
                 if not len(items):
                     return None
                 else:
