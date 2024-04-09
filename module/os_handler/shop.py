@@ -188,9 +188,9 @@ class OSShopHandler(OSStatus, OSShopUI, Selector, MapEventHandler):
         items = self.os_shop_get_items_in_akashi(name=True)
         # Shop supplies do not appear immediately, need to confirm if shop is empty.
         for _ in range(2):
-            if not len(items):
-                logger.info('Empty akashi shop, confirming')
-                self.device.sleep(0.5)
+            if not len(items) or any('Empty' in item.name for item in items):
+                logger.warning('Empty akashi shop or empty items, confirming')
+                self.device.sleep((0.3, 0.5))
                 self.device.screenshot()
                 items = self.os_shop_get_items_in_akashi(name=True)
                 continue
@@ -213,9 +213,9 @@ class OSShopHandler(OSStatus, OSShopUI, Selector, MapEventHandler):
         logger.attr('CL1 enabled', self.is_cl1_enabled)
 
         for _ in range(2):
-            if not len(items):
-                logger.info('Empty OS shop, confirming')
-                self.device.sleep(0.5)
+            if not len(items) or any('Empty' in item.name for item in items):
+                logger.warning('Empty OS shop or empty items, confirming')
+                self.device.sleep((0.3, 0.5))
                 self.device.screenshot()
                 items = self.os_shop_get_items(name=True)
                 continue
