@@ -1,7 +1,6 @@
 import re
 from module.config.config_generated import GeneratedConfig
-
-from module.os_handler.preset import *
+from module.os_shop.preset import *
 from module.base.filter import Filter
 
 FILTER_REGEX = re.compile(

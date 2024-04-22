@@ -8,6 +8,7 @@ from module.logger import logger
 from module.map.map_grids import SelectedGrids
 from module.ocr.ocr import Digit
 from module.os_handler.assets import *
+from module.os_shop.assets import OS_SHOP_CHECK, OS_SHOP_PURPLE_COINS, SHOP_PURPLE_COINS, SHOP_YELLOW_COINS
 from module.ui.ui import UI
 
 OCR_SHOP_YELLOW_COINS = Digit(SHOP_YELLOW_COINS, letter=(239, 239, 239), threshold=160, name='OCR_SHOP_YELLOW_COINS')

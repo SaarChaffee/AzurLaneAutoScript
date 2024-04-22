@@ -4,7 +4,8 @@ from module.base.decorator import cached_property
 from module.base.timer import Timer
 from module.base.utils import random_rectangle_vector
 from module.exception import ScriptError
-from module.os_handler.assets import *
+from module.ocr.ocr import DigitYuv
+from module.os_shop.assets import OS_SHOP_SAFE_AREA, OS_SHOP_SCROLL_AREA, PORT_SUPPLY_CHECK
 from module.logger import logger
 from module.ui.navbar import Navbar
 from module.ui.scroll import Scroll
@@ -13,6 +14,19 @@ from module.ui.ui import UI
 OS_SHOP_SCROLL = Scroll(OS_SHOP_SCROLL_AREA, color=(148, 174, 231), name="OS_SHOP_SCROLL")
 OS_SHOP_SCROLL.edge_threshold = 0.05
 OS_SHOP_SCROLL.drag_threshold = 0.05
+
+class OSShopPrice(DigitYuv):
+    def after_process(self, result):
+        result = result.replace('I', '1').replace('D', '0').replace('S', '5')
+        result = result.replace('B', '8')
+
+        prev = result
+        if result.startswith('0'):
+            result = '1' + result
+            logger.warning(f'OS shop amount {prev} is revised to {result}')
+
+        result = super().after_process(result)
+        return result
 
 class OSShopUI(UI):
     def os_shop_load_ensure(self, skip_first_screenshot=True):
