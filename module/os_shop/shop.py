@@ -1,4 +1,3 @@
-
 from module.exception import ScriptError
 from module.logger import logger
 from module.os_shop.assets import PORT_SUPPLY_CHECK, SHOP_BUY_CONFIRM
@@ -7,6 +6,7 @@ from module.os_shop.port_shop import PortShop
 from module.os_shop.ui import OS_SHOP_SCROLL
 from module.shop.assets import AMOUNT_MAX, SHOP_BUY_CONFIRM_AMOUNT, SHOP_BUY_CONFIRM as OS_SHOP_BUY_CONFIRM
 from module.shop.clerk import OCR_SHOP_AMOUNT
+
 
 class OSShop(PortShop, AkashiShop):
     def os_shop_buy_execute(self, button, skip_first_screenshot=True) -> bool:
@@ -126,34 +126,35 @@ class OSShop(PortShop, AkashiShop):
         Pages:
             in: PORT_SUPPLY_CHECK
         """
-        _count = 0
-        temp_queue = self.device.click_record
-        self.device.click_record.clear()
-
-        for i in range(4):
-            count = 0
-            self.os_shop_side_navbar_ensure(upper=i + 1)
-            pre_pos, cur_pos = self.init_slider()
-
-            while True:
-                pre_pos = self.pre_scroll(pre_pos, cur_pos)
-                count += self.os_shop_buy(select_func=self.os_shop_get_item_to_buy_in_port)
-
-                if count >= 10:
-                    logger.info('This shop reach max buy count, go to next shop')
+        items = self.scan_all()
+        if not len(items):
+            logger.warning('Empty OS shop.')
+            return False
+        items = self.items_filter_in_os_shop(items)
+        if not len(items):
+            logger.warning('Nothing to buy.')
+            return False
+        items.reverse()
+        count = 0
+        while len(items):
+            item = items.pop()
+            self.os_shop_get_coins()
+            if not self.enough_coins_in_port(item):
+                logger.info(f'Not enough coins to buy item: {item.name}, stop.')
+                if self._shop_yellow_coins < (100000 if self.is_cl1_enabled else 35000) \
+                        and self._shop_purple_coins < 100:
+                    logger.info('Not enough coins to buy any items, stop.')
                     break
-                elif OS_SHOP_SCROLL.at_bottom(main=self):
-                    logger.info('OS shop reach bottom, stop')
-                    break
-                else:
-                    OS_SHOP_SCROLL.next_page(main=self, page=0.5)
-                    cur_pos = OS_SHOP_SCROLL.cal_position(main=self)
-                    continue
-            _count += count
-            self.device.click_record.clear()
-
-        self.device.click_record = temp_queue
-        return _count > 0 or len(self.os_shop_items.items) == 0
+                continue
+            while not self.os_shop_side_navbar_ensure(upper=item.shop_index + 1):
+                logger.info(f'Change to shop {item.shop_index + 1}.')
+                pass
+            while not abs(item.scroll_pos - OS_SHOP_SCROLL.cal_position(main=self)) <= OS_SHOP_SCROLL.drag_threshold:
+                OS_SHOP_SCROLL.set(item.scroll_pos, main=self, skip_first_screenshot=False)
+            if self.os_shop_buy_execute(item.button):
+                count += 1
+        logger.info(f'Bought {f"{count} items" if count else "nothing"} in port.')
+        return True
 
     def handle_akashi_supply_buy(self, grid):
         """

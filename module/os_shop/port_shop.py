@@ -1,4 +1,5 @@
-from module.base.button import Button, ButtonGrid
+from typing import List
+from module.base.button import ButtonGrid
 from module.base.decorator import cached_property
 from module.base.template import Template
 from module.logger import logger
@@ -7,18 +8,25 @@ from module.ocr.ocr import DigitYuv
 from module.os_handler.map_event import MapEventHandler
 from module.os_handler.os_status import OSStatus
 from module.os_shop.selector import Selector
-from module.os_shop.ui import OSShopPrice, OSShopUI
-from module.statistics.item import ItemGrid
+from module.os_shop.ui import OSShopPrice, OSShopUI, OS_SHOP_SCROLL
+from module.os_shop.item import OSShopItem as Item, OSShopItemGrid as ItemGrid
+from module.statistics.utils import load_folder
 
-TEMPLATE_YELLOW_COINS = Template('./assets/shop/os_cost/YellowCoins_1.png')
-TEMPLATE_PURPLE_COINS = Template('./assets/shop/os_cost/PurpleCoins_1.png')
-TEMPLATE_YELLOW_COINS_SOLD_OUT = Template('./assets/shop/os_cost_sold_out/YellowCoins.png')
-TEMPLATE_PURPLE_COINS_SOLD_OUT = Template('./assets/shop/os_cost_sold_out/PurpleCoins.png')
-TEMPLATES = [TEMPLATE_YELLOW_COINS, TEMPLATE_PURPLE_COINS, TEMPLATE_YELLOW_COINS_SOLD_OUT, TEMPLATE_PURPLE_COINS_SOLD_OUT]
 
 class PortShop(OSStatus, OSShopUI, Selector, MapEventHandler):
     _shop_yellow_coins = 0
     _shop_purple_coins = 0
+
+    @cached_property
+    def TEMPLATES(self) -> List[Template]:
+        TEMPLATES = []
+        coins = load_folder('./assets/shop/os_cost')
+        coins_sold_out = load_folder('./assets/shop/os_cost_sold_out')
+        for c in coins.values():
+            TEMPLATES.append(Template(c))
+        for c in coins_sold_out.values():
+            TEMPLATES.append(Template(c))
+        return TEMPLATES
 
     def os_shop_get_coins(self):
         self._shop_yellow_coins = self.get_yellow_coins()
@@ -32,8 +40,8 @@ class PortShop(OSStatus, OSShopUI, Selector, MapEventHandler):
         Returns:
             list:
         """
-        image = self.image_crop((360, 320, 410, 720))
-        result = sum([template.match_multi(image) for template in TEMPLATES], [])
+        image = self.image_crop((360, 320, 410, 700))
+        result = sum([template.match_multi(image) for template in self.TEMPLATES], [])
         logger.info(f'Costs: {result}')
         return Points([(0., m.area[1]) for m in result]).group(threshold=5)
 
@@ -61,10 +69,11 @@ class PortShop(OSStatus, OSShopUI, Selector, MapEventHandler):
         return ButtonGrid(
             origin=(356, y), delta=(160, 0), button_shape=(98, 98), grid_shape=(5, 1), name='OS_SHOP_GRID')
 
-    def os_shop_get_items(self, name=True) -> list:
+    def os_shop_get_items(self, shop_index=-1, scroll_pos=-1.0) -> List[Item]:
         """
         Args:
-            name (bool): If detect item name. True if detect akashi shop, false if detect port shop.
+            shop_index (Integer): Additional shop index.
+            scroll_pos (Float): Additional scroll position.
 
         Returns:
             list[Item]:
@@ -76,7 +85,7 @@ class PortShop(OSStatus, OSShopUI, Selector, MapEventHandler):
             self.os_shop_items.grids = self._get_os_shop_grid(cost)
             if self.config.SHOP_EXTRACT_TEMPLATE:
                 self.os_shop_items.extract_template(self.device.image, './assets/shop/os')
-            self.os_shop_items.predict(self.device.image, name=name, amount=name, cost=True, price=True)
+            self.os_shop_items.predict(self.device.image, shop_index=shop_index, scroll_pos=scroll_pos)
             shop_items = self.os_shop_items.items
 
             if len(shop_items):
@@ -88,27 +97,41 @@ class PortShop(OSStatus, OSShopUI, Selector, MapEventHandler):
 
         return items
 
-    def os_shop_get_item_to_buy_in_port(self) -> Button:
+    def scan_all(self) -> List[Item]:
         """
         Returns:
             list[Item]:
         """
-        self.os_shop_get_coins()
-        items = self.os_shop_get_items(name=True)
-        logger.attr('CL1 enabled', self.is_cl1_enabled)
+        items = []
+        self.device.click_record.clear()
 
-        for _ in range(2):
-            if not len(items) or any('Empty' in item.name for item in items):
-                logger.warning('Empty OS shop or empty items, confirming')
-                self.device.sleep((0.3, 0.5))
-                self.device.screenshot()
-                items = self.os_shop_get_items(name=True)
-                continue
-            else:
-                items = self.items_filter_in_os_shop(items)
-                if not len(items):
-                    return None
+        for i in range(4):
+            self.os_shop_side_navbar_ensure(upper=i + 1)
+            pre_pos, cur_pos = self.init_slider()
+
+            while True:
+                pre_pos = self.pre_scroll(pre_pos, cur_pos)
+                _items = self.os_shop_get_items(i, cur_pos)
+
+                for _ in range(2):
+                    if not len(_items) or any('Empty' in item.name for item in _items):
+                        logger.warning('Empty OS shop or empty items, confirming')
+                        self.device.sleep((0.3, 0.5))
+                        self.device.screenshot()
+                        _items = self.os_shop_get_items(i, cur_pos)
+                        continue
+                    else:
+                        items += _items
+                        logger.info(f'Found {len(_items)} items in shop {i + 1}')
+                        break
+
+                if OS_SHOP_SCROLL.at_bottom(main=self):
+                    logger.info('OS shop reach bottom, stop')
+                    break
                 else:
-                    return items.pop()
+                    OS_SHOP_SCROLL.next_page(main=self, page=0.5)
+                    cur_pos = OS_SHOP_SCROLL.cal_position(main=self)
+                    continue
+            self.device.click_record.clear()
 
-        return None
+        return items

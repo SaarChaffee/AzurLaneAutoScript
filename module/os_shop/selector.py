@@ -1,6 +1,8 @@
 import re
+from typing import List
 from module.config.config_generated import GeneratedConfig
 from module.os_shop.preset import *
+from module.os_shop.item import OSShopItem as Item
 from module.base.filter import Filter
 
 FILTER_REGEX = re.compile(
@@ -21,7 +23,7 @@ FILTER = Filter(FILTER_REGEX, FILTER_ATTR)
 
 class Selector():
 
-    def pretreatment(self, items) -> list:
+    def pretreatment(self, items) -> List[Item]:
         """
         Pretreatment items.
 
@@ -91,7 +93,7 @@ class Selector():
         """
         return not (self.is_cl1_enabled and item.name == 'PurpleCoins')
 
-    def items_filter_in_akashi_shop(self, items) -> list:
+    def items_filter_in_akashi_shop(self, items) -> List[Item]:
         """
         Returns items that can be bought.
 
@@ -108,7 +110,7 @@ class Selector():
         FILTER.load(parser)
         return FILTER.applys(items, funcs=[self.check_cl1_purple_coins, self.enough_coins_in_akashi])
 
-    def items_filter_in_os_shop(self, items) -> list:
+    def items_filter_in_os_shop(self, items) -> List[Item]:
         """
         Returns items that can be bought.
 
@@ -128,4 +130,4 @@ class Selector():
         else:
             parser = OS_SHOP[preset]
         FILTER.load(parser)
-        return FILTER.applys(items, funcs=[self.enough_coins_in_port, self.check_cl1_purple_coins])
+        return FILTER.apply(items, func=self.check_cl1_purple_coins)
