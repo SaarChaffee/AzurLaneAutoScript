@@ -1,37 +1,33 @@
 OS_SHOP = {
-    #   line:
-    #   1: Logger, PurpleCoins and T4 items
-    #   2: T3 items
-    #   3: ActionPoint
-    #   4: META material
-    #   5-end: Rubbish
+    #   line(all):
+    #   1: T0
+    #   2: T1
+    #   3: ...
+    #   4: META
+    #   5: Rubbish
 
     'max_benefit': """
-        Logger > PurpleCoins > GearDesignPlanT3 > GearPartSpecialized > OrdnanceTestingReportT3 > 
-        GearDesignPlanT2 > DevelopmentMaterialT3 > PlateRandomT4 > GearPartPrototype > OrdnanceTestingReportT2 > 
-        ActionPoint > 
-        GearDesignPlan > OrdnanceTestingReport > DevelopmentMaterialT2
+        LoggerAbyssalT6 > LoggerAbyssalT5 > LoggerObscure > GearDesignPlanT3 > PlateRandomT4 > DevelopmentMaterialT3 >
+        LoggerAbyssalT4 > ActionPoint > GearDesignPlanT2 > GearPart > OrdnanceTestingReportT3 > OrdnanceTestingReportT2 >
+        PurpleCoins > DevelopmentMaterialT2 > OrdnanceTestingReportT1
     """,
     'max_benefit_meta': """
-        Logger > PurpleCoins > GearDesignPlanT3 > GearPartSpecialized > OrdnanceTestingReportT3 > 
-        GearDesignPlanT2 > DevelopmentMaterialT3 > PlateRandomT4 > GearPartPrototype > OrdnanceTestingReportT2 > 
-        ActionPoint > 
-        METARedBook > CrystallizedHeatResistantSteel > NanoceramicAlloy > NeuroplasticProstheticArm > SupercavitationGenerator > 
-        GearDesignPlan > OrdnanceTestingReport > DevelopmentMaterialT2
+        LoggerAbyssalT6 > LoggerAbyssalT5 > LoggerObscure > GearDesignPlanT3 > PlateRandomT4 > DevelopmentMaterialT3 >
+        LoggerAbyssalT4 > ActionPoint > GearDesignPlanT2 > GearPart > OrdnanceTestingReportT3 > OrdnanceTestingReportT2 >
+        PurpleCoins > DevelopmentMaterialT2 > OrdnanceTestingReportT1 >
+        METARedBook > CrystallizedHeatResistantSteel > NanoceramicAlloy > NeuroplasticProstheticArm > SupercavitationGenerator
     """,
-    'no_meta':"""
-        Logger > PurpleCoins > GearDesignPlanT3 > GearPartSpecialized > OrdnanceTestingReportT3 > 
-        GearDesignPlanT2 > DevelopmentMaterialT3 > PlateRandomT4 > GearPartPrototype > OrdnanceTestingReportT2 > 
-        ActionPoint > 
-        GearDesignPlan > OrdnanceTestingReport > DevelopmentMaterialT2 > 
-        DevelopmentMaterial > Tuning > TuningSample > EnergyStorageDevice > RepairPack
+    'no_meta': """
+        LoggerAbyssalT6 > LoggerAbyssalT5 > LoggerObscure > GearDesignPlanT3 > PlateRandomT4 > DevelopmentMaterialT3 >
+        LoggerAbyssalT4 > ActionPoint > GearDesignPlanT2 > GearPart > OrdnanceTestingReportT3 > OrdnanceTestingReportT2 >
+        PurpleCoins > DevelopmentMaterialT2 > OrdnanceTestingReportT1 >
+        LoggerAbyssalT3 > DevelopmentMaterialT1 > TuningT2 > TuningSample > EnergyStorageDevice > RepairPack
     """,
     'all': """
-        Logger > PurpleCoins > GearDesignPlanT3 > GearPartSpecialized > OrdnanceTestingReportT3 > 
-        GearDesignPlanT2 > DevelopmentMaterialT3 > PlateRandomT4 > GearPartPrototype > OrdnanceTestingReportT2 > 
-        ActionPoint > 
-        METARedBook > CrystallizedHeatResistantSteel > NanoceramicAlloy > NeuroplasticProstheticArm > SupercavitationGenerator > 
-        GearDesignPlan > OrdnanceTestingReport >DevelopmentMaterialT2 > 
-        DevelopmentMaterial > Tuning > TuningSample > EnergyStorageDevice > RepairPack
+        LoggerAbyssalT6 > LoggerAbyssalT5 > LoggerObscure > GearDesignPlanT3 > PlateRandomT4 > DevelopmentMaterialT3 >
+        LoggerAbyssalT4 > ActionPoint > GearDesignPlanT2 > GearPart > OrdnanceTestingReportT3 > OrdnanceTestingReportT2 >
+        PurpleCoins > DevelopmentMaterialT2 > OrdnanceTestingReportT1 >
+        METARedBook > CrystallizedHeatResistantSteel > NanoceramicAlloy > NeuroplasticProstheticArm > SupercavitationGenerator >
+        LoggerAbyssalT3 > DevelopmentMaterialT1 > TuningT2 > TuningSample > EnergyStorageDevice > RepairPack
     """
 }
