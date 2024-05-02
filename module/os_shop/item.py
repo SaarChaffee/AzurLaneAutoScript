@@ -32,6 +32,7 @@ class OSShopItemGrid(ItemGrid):
             list[Item]:
         """
         self._load_image(image)
+        self.items = [OSShopItem(item.image_raw, item._button, shop_index, scroll_pos) for item in self.items]
         amount_list = [item.crop(self.amount_area) for item in self.items]
         amount_list = self.amount_ocr.ocr(amount_list, direct_ocr=True)
         name_list = [self.match_template(item.image) for item in self.items]
