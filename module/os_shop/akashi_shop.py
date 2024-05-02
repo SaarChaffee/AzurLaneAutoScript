@@ -5,7 +5,7 @@ from module.os_handler.map_event import MapEventHandler
 from module.os_handler.os_status import OSStatus
 from module.os_shop.selector import Selector
 from module.os_shop.ui import OSShopPrice, OSShopUI
-from module.statistics.item import ItemGrid
+from module.statistics.item import Item, ItemGrid
 
 
 class AkashiShop(OSStatus, OSShopUI, Selector, MapEventHandler):
@@ -81,10 +81,10 @@ class AkashiShop(OSStatus, OSShopUI, Selector, MapEventHandler):
             logger.info('No shop items found')
             return []
 
-    def os_shop_get_item_to_buy_in_akashi(self) -> Button:
+    def os_shop_get_item_to_buy_in_akashi(self) -> Item:
         """
         Returns:
-            list[Item]:
+            Item:
         """
         self.os_shop_get_coins()
         items = self.os_shop_get_items_in_akashi(name=True)

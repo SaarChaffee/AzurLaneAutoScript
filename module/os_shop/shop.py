@@ -9,10 +9,10 @@ from module.shop.clerk import OCR_SHOP_AMOUNT
 
 
 class OSShop(PortShop, AkashiShop):
-    def os_shop_buy_execute(self, button, skip_first_screenshot=True) -> bool:
+    def os_shop_buy_execute(self, item, skip_first_screenshot=True) -> bool:
         """
         Args:
-            button: Item to buy
+            item: Item to buy
             skip_first_screenshot:
 
         Pages:
@@ -44,13 +44,13 @@ class OSShop(PortShop, AkashiShop):
                 continue
 
             if self.appear(SHOP_BUY_CONFIRM_AMOUNT, offset=(20, 20), interval=1):
-                self.shop_buy_amount_handler(button)
+                self.shop_buy_amount_handler(item)
                 self.device.click(SHOP_BUY_CONFIRM_AMOUNT)
                 self.interval_reset(SHOP_BUY_CONFIRM_AMOUNT)
                 continue
 
             if not success and self.appear(PORT_SUPPLY_CHECK, offset=(20, 20), interval=5):
-                self.device.click(button)
+                self.device.click(item._button)
                 continue
 
             # End
@@ -68,12 +68,12 @@ class OSShop(PortShop, AkashiShop):
         """
         count = 0
         for _ in range(12):
-            button = select_func()
-            if button is None:
+            item = select_func()
+            if item is None:
                 logger.info('Shop buy finished')
                 return count
             else:
-                self.os_shop_buy_execute(button)
+                self.os_shop_buy_execute(item)
                 self.os_shop_get_coins()
                 count += 1
                 continue
@@ -151,7 +151,7 @@ class OSShop(PortShop, AkashiShop):
                 pass
             while not abs(item.scroll_pos - OS_SHOP_SCROLL.cal_position(main=self)) <= OS_SHOP_SCROLL.drag_threshold:
                 OS_SHOP_SCROLL.set(item.scroll_pos, main=self, skip_first_screenshot=False)
-            if self.os_shop_buy_execute(item.button):
+            if self.os_shop_buy_execute(item):
                 count += 1
         logger.info(f'Bought {f"{count} items" if count else "nothing"} in port.')
         return True
