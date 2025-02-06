@@ -13,7 +13,8 @@ from module.ui.ui import UI
 OS_SHOP_SCROLL = AdaptiveScroll(
     OS_SHOP_SCROLL_AREA.button,
     parameters={
-        'height': 255 - 66
+        'height': 255 - 66,
+        'prominence': 38,
     },
     name="OS_SHOP_SCROLL"
 )
