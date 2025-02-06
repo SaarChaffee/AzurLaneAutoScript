@@ -14,7 +14,7 @@ OS_SHOP_SCROLL = AdaptiveScroll(
     OS_SHOP_SCROLL_AREA.button,
     parameters={
         'height': 255 - 99,
-        'threshold': 40,
+        'prominence': 40,
     },
     name="OS_SHOP_SCROLL"
 )
