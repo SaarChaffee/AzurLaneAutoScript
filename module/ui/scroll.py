@@ -188,12 +188,12 @@ class Scroll:
         current = self.cal_position(main)
 
         multiply = self.length / (self.total - self.length)
-        logger.info('total:', self.total)
-        logger.info('length:', self.length)
+        logger.info(f'total: {self.total}')
+        logger.info(f'length: {self.length}')
 
-        logger.info('multiply:', multiply)
+        logger.info(f'multiply: {multiply}')
         target = current + page * multiply
-        logger.info('target:', target)
+        logger.info(f'target: {target}')
 
         target = round(min(max(target, 0), 1), 3)
         return self.set(target, main=main, random_range=random_range, skip_first_screenshot=True)
