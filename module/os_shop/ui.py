@@ -13,7 +13,7 @@ from module.ui.ui import UI
 OS_SHOP_SCROLL = AdaptiveScroll(
     OS_SHOP_SCROLL_AREA.button,
     parameters={
-        'height': 255 - 99
+        'height': 255 - 66
     },
     name="OS_SHOP_SCROLL"
 )
@@ -149,7 +149,7 @@ class OSShopUI(UI):
             retry.start()
             while True:
                 logger.warning('Scroll does not drag success, retrying scroll')
-                OS_SHOP_SCROLL.next_page(main=self, page=0.5)
+                OS_SHOP_SCROLL.next_page(main=self, page=0.5, skip_first_screenshot=False)
                 cur_pos = OS_SHOP_SCROLL.cal_position(main=self)
                 if pre_pos != cur_pos:
                     logger.info(f'Scroll success drag page to {cur_pos}')
